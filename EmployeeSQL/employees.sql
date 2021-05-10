@@ -1,7 +1,13 @@
 
 
---Drop table if exists
+--Drop tables if they exist
 drop table "employees";
+drop table "salaries";
+drop table "dept_employees";
+drop table "departments";
+drop table "dept_manager";
+drop table "titles";
+
 
 --Create table
 CREATE TABLE "employees" (
@@ -17,14 +23,6 @@ CREATE TABLE "employees" (
      )
 );
 
---Import CSV
---Quick check of CSV
-select *
-from employees;
-
---Drop table if exists
-drop table "salaries";
-
 --Create table
 
 CREATE TABLE "salaries" (
@@ -33,15 +31,7 @@ CREATE TABLE "salaries" (
     primary key ("emp_no","salary")
 );
 
---Import CSV
---Quick check of CSV
-select *
-from salaries
-limit 10;
 
-
---Drop table if exists
-drop table "dept_employees";
 
 --Create table
 CREATE TABLE "dept_employees" (
@@ -50,14 +40,7 @@ CREATE TABLE "dept_employees" (
     primary key ("emp_no","dept_no")
 );
 
---Import CSV
---Quick check of CSV
-select *
-from dept_employees
-limit 10;
 
---Drop table if exists
-drop table "departments";
 
 --Create table
 CREATE TABLE "departments" (
@@ -68,15 +51,6 @@ CREATE TABLE "departments" (
      )
 );
 
---Import CSV
---Quick check of CSV
-select *
-from departments
-limit 10;
-
-
---Drop table if exists
-drop table "dept_manager";
 
 --Create table
 CREATE TABLE "dept_manager" (
@@ -84,12 +58,6 @@ CREATE TABLE "dept_manager" (
     "emp_no" INT   NOT null,
     primary key ("dept_no","emp_no")
 );
-
---Import CSV
---Quick check of CSV
-select *
-from dept_manager
-limit 10;
 
 
 --Create table
@@ -100,6 +68,43 @@ CREATE TABLE "titles" (
         "title_id"
      )
 );
+
+--Import CSV
+--Quick check of CSV
+select *
+from employees;
+
+
+--Import CSV
+--Quick check of CSV
+select *
+from salaries
+limit 10;
+
+
+--Import CSV
+--Quick check of CSV
+select *
+from dept_employees
+limit 10;
+
+
+--Import CSV
+--Quick check of CSV
+select *
+from departments
+limit 10;
+
+
+--Import CSV
+--Quick check of CSV
+select *
+from dept_manager
+limit 10;
+
+
+
+
 
 --Change the table to include foreign keys
 ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_emp_title_id" FOREIGN KEY("emp_title_id")
@@ -119,3 +124,8 @@ REFERENCES "departments" ("dept_no");
 
 ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_emp_no" FOREIGN KEY("emp_no")
 REFERENCES "employees" ("emp_no");
+
+
+
+
+
