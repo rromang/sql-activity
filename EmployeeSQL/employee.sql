@@ -44,7 +44,7 @@ limit 5;
 --Remove titles table if exists
 drop table "Department_Mgr";
 
-
+--Create Department_Mgr table
 CREATE TABLE "Department_Mgr" (
     "emp_no" INT   NOT NULL,
     "dept_no" VARCHAR(30)   NOT null,
@@ -56,3 +56,37 @@ CREATE TABLE "Department_Mgr" (
 select *
 from "Department_Mgr"
 limit 5;
+
+--Remove salaries table if exists
+drop table "Salaries";
+
+--Create Salaries table
+CREATE TABLE "Salaries" (
+    "emp_no" INT   NOT NULL,
+    "salary" INT   NOT null,
+    primary key ("emp_no","salary")
+);
+
+--Import CSV
+--Quick View of imported data
+select *
+from "Salaries"
+limit 5;
+
+
+--Remove manager table if exists
+drop table "Manager";
+
+--Create Manager table
+CREATE TABLE "Manager" (
+    "dept_no" VARCHAR(30)   NOT NULL,
+    "emp_no" INT   NOT null,
+    primary key ("dept_no","emp_no")
+);
+
+--Import CSV
+--Quick View of imported data
+select *
+from "Manager"
+limit 5;
+
