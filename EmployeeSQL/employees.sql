@@ -72,7 +72,8 @@ CREATE TABLE "titles" (
 --Import CSV
 --Quick check of CSV
 select *
-from employees;
+from employees
+limit 10;
 
 
 --Import CSV
@@ -103,9 +104,6 @@ from dept_manager
 limit 10;
 
 
-
-
-
 --Change the table to include foreign keys
 ALTER TABLE "employees" ADD CONSTRAINT "fk_employees_emp_title_id" FOREIGN KEY("emp_title_id")
 REFERENCES "titles" ("title_id");
@@ -127,5 +125,18 @@ REFERENCES "employees" ("emp_no");
 
 
 
+create table merged_tb as (
+SELECT 
+	e.emp_no, 
+	e.emp_title_id,
+	e.birth_date,
+	e.first_name,
+	e.last_name,
+	e.sex,
+	e.hire_date,
+	s.salary
+    FROM employees as e , salaries as s 
+    WHERE s.emp_no = e.emp_no
 
+);
 
