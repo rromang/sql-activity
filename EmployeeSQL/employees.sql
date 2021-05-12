@@ -135,8 +135,9 @@ ALTER TABLE "dept_manager" ADD CONSTRAINT "fk_dept_manager_emp_no" FOREIGN KEY("
 REFERENCES "employees" ("emp_no");
 
 
+--Create table with employee info plus salary info
 
-create table merged_tb as (
+create table employee_salary as (
 SELECT 
 	e.emp_no, 
 	e.emp_title_id,
@@ -148,103 +149,134 @@ SELECT
 	s.salary
     FROM employees as e , salaries as s 
     WHERE s.emp_no = e.emp_no
-
 );
 
 --Check merged table
 select *
-from merged_tb
+from employee_salary
 limit 10;
 
-create table merged_tb2 as (
+
+--Create table with employee info plus salary and dept_no
+create table employee_dept as (
 SELECT 
-	mt.emp_no, 
-	mt.emp_title_id,
-	mt.birth_date,
-	mt.first_name,
-	mt.last_name,
-	mt.sex,
-	mt.hire_date,
-	mt.salary,
+	es.emp_no, 
+	es.emp_title_id,
+	es.birth_date,
+	es.first_name,
+	es.last_name,
+	es.sex,
+	es.hire_date,
+	es.salary,
 	de.dept_no
-    FROM merged_tb as mt , dept_employees as de 
-    WHERE mt.emp_no = de.emp_no
-
+    FROM employee_salary as es , dept_employees as de 
+    WHERE es.emp_no = de.emp_no
 );
 
 --Check merged table
 select *
-from merged_tb2
+from employee_dept
 limit 10;
 
-drop table merged_tb3
 
-create table merged_tb3 as (
+--Create table with employee info plus salary, dept_no and dept_name
+create table employee_deptname as (
+SELECT * FROM
+		(SELECT
+		ed.emp_no, 
+		ed.emp_title_id,
+		ed.birth_date,
+		ed.first_name,
+		ed.last_name,
+		ed.sex,
+		ed.hire_date,
+		ed.salary,
+		ed.dept_no,
+		dt.dept_name
+		FROM employee_dept AS ed
+		LEFT JOIN departments AS dt
+			ON ed.dept_no = dt.dept_no
+		 )  AS Employees_Data
+);
+
+select *
+from employee_deptname
+limit 10;
+
+--Create table with employee info plus salary, dept_no, dept_name and title
+create table employee_info as (
+SELECT * FROM
+	(
+		SELECT
+		en.emp_no, 
+		en.emp_title_id,
+		en.birth_date,
+		en.first_name,
+		en.last_name,
+		en.sex,
+		en.hire_date,
+		en.salary,
+		en.dept_no,
+		en.dept_name,
+		t.title
+		FROM employee_deptname AS en
+		LEFT JOIN titles AS t
+			ON en.emp_title_id = t.title_id
+	) AS Employees_Data
+);
+
+select *
+from employee_info
+limit 10;
+
+--Change order of columns
+CREATE TABLE employee_info_new as (
 SELECT * FROM
 	(
 		SELECT
 		emp_no, 
 		emp_title_id,
+		dept_no,
+		dept_name,
+		title,
 		birth_date,
 		first_name,
 		last_name,
 		sex,
 		hire_date,
-		salary,
-		mt2.dept_no,
-		dt.dept_name
-		FROM merged_tb2 AS mt2
-		LEFT JOIN departments AS dt
-			ON mt2.dept_no = dt.dept_no
+		salary
+		FROM employee_info
 	) AS Employees_Data
 );
 
 select *
-from merged_tb3
+from employee_info_new
 limit 10;
 
-create table merged_tb4 as (
+
+drop table dept_mgr_info
+--Create table with employee info plus salary, dept_no and dept_name but only for dept managers
+create table dept_mgr_info as (
 SELECT * FROM
 	(
 		SELECT
-		mt3.emp_no, 
-		mt3.emp_title_id,
-		mt3.birth_date,
-		mt3.first_name,
-		mt3.last_name,
-		mt3.dept_no,
-		mt3.dept_name
-		FROM merged_tb3 AS mt3
+		en.emp_no, 
+		en.emp_title_id,
+		en.title,
+		en.dept_no,
+		en.dept_name,
+		en.birth_date,
+		en.first_name,
+		en.last_name
+		FROM employee_info_new AS en
 		LEFT JOIN dept_manager AS dm
-			ON mt3.emp_no = dm.emp_no
+			ON en.emp_no = dm.emp_no
 	) AS Employees_Data2
 );
 
 select *
-from merged_tb4
+from dept_mgr_info
 limit 10;
 
-create table merged_tb5 as (
-SELECT * FROM
-	(
-		SELECT
-		mt3.emp_no, 
-		mt3.emp_title_id,
-		mt3.birth_date,
-		mt3.first_name,
-		mt3.last_name,
-		mt3.sex,
-		mt3.hire_date,
-		mt3.salary,
-		mt3.dept_no,
-		mt3.dept_name,
-		t.title
-		FROM merged_tb3 AS mt3
-		LEFT JOIN titles AS t
-			ON mt3.emp_title_id = t.title_id
-	) AS Employees_Data
-);
 
-select *
-from merged_tb5
-limit 10;
+
