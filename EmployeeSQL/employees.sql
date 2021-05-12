@@ -8,7 +8,6 @@ drop table "departments";
 drop table "dept_manager";
 drop table "titles";
 
-
 --Create table
 CREATE TABLE "employees" (
     "emp_no" INT   NOT NULL,
@@ -70,6 +69,7 @@ CREATE TABLE "titles" (
 );
 
 --Import CSV
+
 --Quick check of CSV
 select *
 from employees
@@ -77,6 +77,7 @@ limit 10;
 
 
 --Import CSV
+
 --Quick check of CSV
 select *
 from salaries
@@ -84,6 +85,7 @@ limit 10;
 
 
 --Import CSV
+
 --Quick check of CSV
 select *
 from dept_employees
@@ -91,6 +93,7 @@ limit 10;
 
 
 --Import CSV
+
 --Quick check of CSV
 select *
 from departments
@@ -98,9 +101,17 @@ limit 10;
 
 
 --Import CSV
+
 --Quick check of CSV
 select *
 from dept_manager
+limit 10;
+
+--Import CSV
+
+--Quick check of CSV
+select *
+from titles
 limit 10;
 
 
@@ -140,3 +151,100 @@ SELECT
 
 );
 
+--Check merged table
+select *
+from merged_tb
+limit 10;
+
+create table merged_tb2 as (
+SELECT 
+	mt.emp_no, 
+	mt.emp_title_id,
+	mt.birth_date,
+	mt.first_name,
+	mt.last_name,
+	mt.sex,
+	mt.hire_date,
+	mt.salary,
+	de.dept_no
+    FROM merged_tb as mt , dept_employees as de 
+    WHERE mt.emp_no = de.emp_no
+
+);
+
+--Check merged table
+select *
+from merged_tb2
+limit 10;
+
+drop table merged_tb3
+
+create table merged_tb3 as (
+SELECT * FROM
+	(
+		SELECT
+		emp_no, 
+		emp_title_id,
+		birth_date,
+		first_name,
+		last_name,
+		sex,
+		hire_date,
+		salary,
+		mt2.dept_no,
+		dt.dept_name
+		FROM merged_tb2 AS mt2
+		LEFT JOIN departments AS dt
+			ON mt2.dept_no = dt.dept_no
+	) AS Employees_Data
+);
+
+select *
+from merged_tb3
+limit 10;
+
+create table merged_tb4 as (
+SELECT * FROM
+	(
+		SELECT
+		mt3.emp_no, 
+		mt3.emp_title_id,
+		mt3.birth_date,
+		mt3.first_name,
+		mt3.last_name,
+		mt3.dept_no,
+		mt3.dept_name
+		FROM merged_tb3 AS mt3
+		LEFT JOIN dept_manager AS dm
+			ON mt3.emp_no = dm.emp_no
+	) AS Employees_Data2
+);
+
+select *
+from merged_tb4
+limit 10;
+
+create table merged_tb5 as (
+SELECT * FROM
+	(
+		SELECT
+		mt3.emp_no, 
+		mt3.emp_title_id,
+		mt3.birth_date,
+		mt3.first_name,
+		mt3.last_name,
+		mt3.sex,
+		mt3.hire_date,
+		mt3.salary,
+		mt3.dept_no,
+		mt3.dept_name,
+		t.title
+		FROM merged_tb3 AS mt3
+		LEFT JOIN titles AS t
+			ON mt3.emp_title_id = t.title_id
+	) AS Employees_Data
+);
+
+select *
+from merged_tb5
+limit 10;
