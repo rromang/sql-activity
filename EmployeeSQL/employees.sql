@@ -256,10 +256,8 @@ limit 10;
 
 drop table dept_mgr_info
 --Create table with employee info plus salary, dept_no and dept_name but only for dept managers
-create table dept_mgr_info as (
-SELECT * FROM
-	(
-		SELECT
+CREATE TABLE dept_mgr_info as (
+SELECT 
 		en.emp_no, 
 		en.emp_title_id,
 		en.title,
@@ -268,15 +266,36 @@ SELECT * FROM
 		en.birth_date,
 		en.first_name,
 		en.last_name
-		FROM employee_info_new AS en
-		LEFT JOIN dept_manager AS dm
-			ON en.emp_no = dm.emp_no
-	) AS Employees_Data2
+FROM employee_info_new AS en INNER JOIN dept_manager USING (emp_no)
 );
 
 select *
-from dept_mgr_info
-limit 10;
+from dept_mgr_info;
 
+---Data Analysis
+--List the following details of each employee: employee number, last name, first name, sex, and salary.
+SELECT
+		emp_no, 
+		first_name,
+		last_name,
+		sex,
+		salary
+FROM employee_info;
 
+--List first name, last name, and hire date for employees who were hired in 1986.
+SELECT
+		emp_no, 
+		first_name,
+		last_name,
+		hire_date
+FROM employee_info
+WHERE hire_date LIKE '%1986';
 
+--List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name.
+SELECT
+	dept_no,
+	dept_name,
+	emp_no,
+	first_name,
+	last_name
+FROM dept_mgr_info;
