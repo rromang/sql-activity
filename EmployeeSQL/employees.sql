@@ -136,7 +136,7 @@ REFERENCES "employees" ("emp_no");
 
 
 --Create table with employee info plus salary info
-
+drop table employee_salary;
 create table employee_salary as (
 SELECT 
 	e.emp_no, 
@@ -254,7 +254,7 @@ from employee_info_new
 limit 10;
 
 
-drop table dept_mgr_info
+
 --Create table with employee info plus salary, dept_no and dept_name but only for dept managers
 CREATE TABLE dept_mgr_info as (
 SELECT 
@@ -271,4 +271,14 @@ FROM employee_info_new AS en INNER JOIN dept_manager USING (emp_no)
 
 select *
 from dept_mgr_info;
+
+
+drop table employee_info_new;
+ALTER TABLE employee_info_new
+	ADD COLUMN id SERIAL PRIMARY KEY;
+	
+select *
+from employee_info_new
+limit 10;
+
 
