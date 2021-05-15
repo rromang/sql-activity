@@ -59,3 +59,13 @@ SELECT COUNT(emp_no), last_name
 FROM employee_info_new
 GROUP BY employee_info_new.last_name
 ORDER BY COUNT(emp_no) DESC;
+
+--Search number ID 499942
+SELECT
+		emp_no,
+		last_name,
+		first_name,
+		dept_name		
+FROM employee_info_new
+WHERE emp_no = 499942;
+
